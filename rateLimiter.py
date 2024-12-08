@@ -1,9 +1,10 @@
+from irate_limiter import IRateLimiter
 import time
 from log import get_logger
 
 log = get_logger(__name__)
 
-class RateLimiter:
+class RateLimiter(IRateLimiter):
     def __init__(self, redis_client, rate_limit, refill_rate):
         self.redis = redis_client
         self.rate_limit= rate_limit
