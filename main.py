@@ -5,19 +5,16 @@ from irate_limiter import IRateLimiter
 from log import get_logger
 from rateLimiter import RateLimiter
 import constants as const
+from Block_by_client_IP import BlockByIP
+from iblockId import IBlockId
 class RateLimitedApp:
-    def __init__(self,rate_limiter:IRateLimiter):
+    def __init__(self,rate_limiter:IRateLimiter,block_id:IBlockId ):
         self.app = Flask(__name__)
         self.rate_limiter = rate_limiter
         self.log  = get_logger(__name__)
-    def get_client_ip(self):
-        """Get the client's IP address."""
-        if request.headers.get('X-Forwarded-For'):
-            return request.headers.get('X-Forwarded-For').split(',')[0]
-        return request.remote_addr
-
+        self.block_id = block_id
     def handle_request(self):
-        client_ip = self.get_client_ip()
+        client_ip = self.block_id.blockId()
         self.log.info(f"User IP: {client_ip}")
         allowed, retry_after = self.rate_limiter.is_allowed(client_ip)
         if allowed:
@@ -35,6 +32,6 @@ class RateLimitedApp:
 if __name__ == "__main__":
     redis_client = Redis(host='localhost', port=6379, db=0)
     rate_limiter = RateLimiter(redis_client, const.RATE_LIMIT, const.REFILL_RATE)
-    app = RateLimitedApp(rate_limiter)
+    app = RateLimitedApp(rate_limiter,BlockByIP())
     app.register_routes()
     app.run()
