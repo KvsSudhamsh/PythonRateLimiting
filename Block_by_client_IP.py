@@ -1,5 +1,6 @@
 from iblockId import IBlockId
-from flask import Flask, request, jsonify
+from flask import request
+
 class BlockByIP(IBlockId):
     def blockId(self):
         if request.headers.get('X-Forwarded-For'):
