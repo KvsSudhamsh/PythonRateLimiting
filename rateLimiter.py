@@ -27,4 +27,4 @@ class RateLimiter(IRateLimiter):
                 return False, None
         else:
             self.redis.set(client_ip, f'{self.rate_limit - 1}:{current_time}')
-            return False, None
+            return True, None
