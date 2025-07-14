@@ -29,7 +29,7 @@ class RateLimitedApp:
 
     def run(self, debug=True):
         """Run the Flask app."""
-        self.app.run(debug=debug)
+        self.app.run(host = '0.0.0.0',port = "5001", debug=debug)
 
 if __name__ == "__main__":
     redis_client = RedisStorage()

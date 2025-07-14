@@ -14,6 +14,7 @@ class RateLimiter(IRateLimiter):
         # check if client is allowed to make a request
         current_time = int(time.time())
         user_data = self.redis.get(client_ip)
+        print(client_ip,"client IP: ----")
         if user_data:
             tokens, last_time = map(int, user_data.decode('utf-8').split(':'))
             elapsed_time = current_time - last_time
